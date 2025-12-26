@@ -2,11 +2,16 @@
 
 "use client";
 
-import api from "@/app/apicall";
-import { ChatContext } from "@/app/context/chatcontext";
+import api from '../../src/api'
+
 import React, { useContext, useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { FaUserCircle, FaCamera, FaPhone, FaVideo, FaEnvelope } from "react-icons/fa";
+import { ChatContext } from '@/app/src/context/chatcontext';
+
+
+
+
 
 export default function ChatRoom({ userId }) {
     const { id } = useParams();
@@ -87,7 +92,7 @@ export default function ChatRoom({ userId }) {
     const handleVideoCall = () => {
 
         socket.emit("call-user", {
-            from: myUsername, to: id, callType: "video"
+            from: myUsername, to: id, callType: "video", roomId: "123456"
         })
         console.log("Start video call with:", id);
 

@@ -1,9 +1,4 @@
 
-
-
-
-
-
 "use client";
 
 import React, { createContext, useState, useEffect, useCallback, useRef } from "react";
@@ -161,6 +156,8 @@ export const ChatProvider = ({ children }) => {
             setIncomingUser({ from, type, to, roomId });
             setIncomingCall(true);
             console.log('incoming call ka', from, roomId)
+
+            console.log('incomit ', incomingCall)
         };
 
         const handleCallAccepted = ({ from }) => {

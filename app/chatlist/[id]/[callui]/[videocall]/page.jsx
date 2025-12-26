@@ -1,6 +1,6 @@
 "use client";
 
-import { ChatContext } from "@/app/context/chatcontext";
+import { ChatContext } from '@/app/src/context/chatcontext';
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useRef, useState } from "react";
 

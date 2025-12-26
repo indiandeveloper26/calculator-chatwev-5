@@ -4,8 +4,9 @@ import React, { useState, useContext } from "react";
 import Image from "next/image";
 
 import { useRouter } from "next/navigation";
-import { ChatContext } from "@/src/context/chatcontext";
-import api from "@/src/api";
+
+import api from "@/app/src/api";
+import { ChatContext } from "../src/context/chatcontext";
 
 
 export default function SignupPage() {

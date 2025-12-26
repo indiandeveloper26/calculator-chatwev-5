@@ -9,7 +9,8 @@
 
 import React, { useEffect, useState, useContext } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { ChatContext } from "@/src/context/chatcontext";
+import { ChatContext } from "../src/context/chatcontext";
+
 
 
 export default function ChatList() {

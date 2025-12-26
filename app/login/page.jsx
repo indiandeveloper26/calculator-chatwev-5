@@ -5,8 +5,8 @@ import Image from "next/image";
 // static image in /assets
 import { useRouter } from "next/navigation"
 
-import api from "@/src/api";
-import { ChatContext } from "@/src/context/chatcontext";
+import api from "@/app/src/api";
+import { ChatContext } from "@/app/src/context/chatcontext";
 
 
 export default function Login() {

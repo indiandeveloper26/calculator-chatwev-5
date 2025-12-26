@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 
 import { useRouter } from "next/navigation";
-import { ChatContext } from "@/app/context/chatcontext";
+import { ChatContext } from '@/app/src/context/chatcontext';
 
 export default function page({ from, to, callType = "video" }) {
     const { socket, incomingUser } = useContext(ChatContext);
