@@ -160,14 +160,41 @@ export const ChatProvider = ({ children }) => {
             console.log('incomit ', incomingCall)
         };
 
+        // const handleCallAccepted = ({ from }) => {
+        //     console.log("✅ Call accepted by:", from);
+        //     setAcceptedCall(true);
+        //     setIncomingCall(false);
+
+        //     socket.emit('accept-call', { to: myUsername })
+
+
+
+        //     ruter.push(`/chatlist/${from}/callui/videocall`);
+        // };
+
+
         const handleCallAccepted = ({ from }) => {
             console.log("✅ Call accepted by:", from);
             setAcceptedCall(true);
             setIncomingCall(false);
 
-            socket.emit('accept-call', { to: myUsername })
-            ruter.push(`/chatlist/${from}/callui/videocall`);
+            socket.emit('accept-call', { to: myUsername });
+
+            console.log(incomingUser)
+
+            // Use incomingUser.type to decide route
+            if (incomingUser?.type === 'audio') {
+                console.log('type auso')
+                ruter.push("/");
+            } else if (incomingUser?.type === 'video') {
+                console.log('type vidoecall')
+                ruter.push(`/chatlist/${from}/callui/videocall`);
+            } else {
+                // fallback
+                ruter.push(`/chatlist/${from}`);
+            }
         };
+
 
         const handleCallRejected = ({ by }) => {
 

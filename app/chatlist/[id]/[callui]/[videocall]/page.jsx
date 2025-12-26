@@ -15,7 +15,9 @@ export default function VideoCall() {
     console.log('dtatda', incomingUser.roomId)
 
 
-    const ROOM_ID = incomingUser.roomId;
+    // const ROOM_ID = incomingUser.roomId;
+
+    const ROOM_ID = '123456'
 
     useEffect(() => {
         if (!socket) return;
