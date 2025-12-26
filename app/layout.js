@@ -1,5 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { ChatProvider } from "@/src/context/chatcontext";
+import WhatsAppLayout from "@/src/whatsaplayout";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,7 +24,13 @@ export default function RootLayout({ children }) {
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+
+        <ChatProvider>
+          <WhatsAppLayout />
+
+          {children}
+        </ChatProvider>
+
       </body>
     </html>
   );
