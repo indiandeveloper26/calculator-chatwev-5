@@ -3,18 +3,18 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function page() {
-    const router = useRouter();
+  const router = useRouter();
 
-    return (
-        <div className="container">
-            <div className="content">
+  return (
+    <div className="container">
+      <div className="content">
 
-                <button onClick={() => router.push("/")} className="btn">
-                    Go Back Homee
-                </button>
-            </div>
+        <button onClick={() => router.push("/chatlist")} className="btn">
+          Go Back Homee
+        </button>
+      </div>
 
-            <style jsx>{`
+      <style jsx>{`
         .container {
           display: flex;
           justify-content: center;
@@ -64,6 +64,6 @@ export default function page() {
           }
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 }

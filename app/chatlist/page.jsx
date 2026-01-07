@@ -1,259 +1,162 @@
-
-
-
-
-
-
-
 "use client";
 
 import React, { useEffect, useState, useContext } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ChatContext } from "../src/context/chatcontext";
 
-
+// Simple function to generate color from string (username)
+function stringToColor(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const colors = [
+    "#34d399", // green
+    "#60a5fa", // blue
+    "#fbbf24", // yellow
+    "#f87171", // red
+    "#a78bfa", // purple
+    "#f472b6", // pink
+    "#f97316", // orange
+    "#2dd4bf", // teal
+    "#e879f9", // magenta
+    "#22c55e", // lime
+  ];
+  return colors[Math.abs(hash) % colors.length];
+}
 
 export default function ChatList() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [username, setUsername] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
-    const pathname = usePathname();
-    console.log('pathname', pathname)
-    const router = useRouter();
-    const [username, setUsername] = useState("");
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedUser, setSelectedUser] = useState(null);
+  const { visibleChats = [], onlineUsers = [], addToDeletedUsers } =
+    useContext(ChatContext);
 
-    const { visibleChats = [], onlineUsers = [], addToDeletedUsers } = useContext(ChatContext);
+  useEffect(() => {
+    const savedName = localStorage.getItem("username");
+    if (savedName) setUsername(savedName);
+  }, []);
 
-    useEffect(() => {
-        const savedName = localStorage.getItem("username");
-        if (savedName) setUsername(savedName);
-    }, []);
+  const openChat = (item) => {
+    if (!item?.adduser) return;
+    router.push(`/chatlist/${item.adduser}`);
+  };
 
-    const openChat = (item) => {
-        if (!item?.adduser) return;
-        router.push(`/chatlist/${item.adduser}`);
-    };
+  const confirmDelete = (user) => {
+    setSelectedUser(user);
+    setModalVisible(true);
+  };
 
-    const confirmDelete = (user) => {
-        setSelectedUser(user);
-        setModalVisible(true);
-    };
+  const handleDelete = () => {
+    addToDeletedUsers?.(selectedUser);
+    setModalVisible(false);
+    setSelectedUser(null);
+  };
 
-    const handleDelete = () => {
-        addToDeletedUsers?.(selectedUser);
-        setModalVisible(false);
-        setSelectedUser(null);
-    };
+  return (
+    <div className="min-h-screen bg-gray-900 p-4 md:p-8 flex flex-col">
+      <h1 className="text-2xl md:text-3xl text-white font-bold mb-4 md:mb-6">
+        Welcome, {username || "Guest"}
+      </h1>
 
-    return (
-        <div className="container">
-            <div className="chat-list">
-                {visibleChats.length === 0 && (
-                    <p className="empty-text">No chats yet. Start chatting!</p>
-                )}
+      <div className="flex-1 overflow-y-auto space-y-3">
+        {visibleChats.length === 0 && (
+          <p className="text-gray-400 text-center mt-10">
+            No chats yet. Start chatting!
+          </p>
+        )}
 
-                {visibleChats.map((item) => {
-                    const user = item.adduser || "Unknown";
-                    const firstLetter = user.charAt(0).toUpperCase();
-                    const isOnline = onlineUsers.includes(user);
+        {visibleChats.map((item) => {
+          const user = item.adduser || "Unknown";
+          const firstLetter = user.charAt(0).toUpperCase();
+          const isOnline = onlineUsers.includes(user);
+          const avatarBg = stringToColor(user); // Generate avatar color
 
-                    return (
-                        <div key={user} className="chat-item">
-                            <div className="chat-left" onClick={() => openChat(item)}>
-                                <div className="avatar">
-                                    <span className="avatar-text">{firstLetter}</span>
-                                    <span
-                                        className={`online-dot ${isOnline ? "online" : "offline"}`}
-                                    />
-                                </div>
-                                <div className="chat-text">
-                                    <p className="username">{user}</p>
-                                    <p className="last-message">{item.lastMessage || "Say hi!"}</p>
-                                </div>
-                                {item.unreadCount > 0 && (
-                                    <div className="unread-badge">{item.unreadCount}</div>
-                                )}
-                            </div>
-
-                            <button className="options-button" onClick={() => confirmDelete(user)}>
-                                ⋮
-                            </button>
-                        </div>
-                    );
-                })}
-            </div>
-
-            {/* Sticky New Chat Button */}
-            <button className="sticky-button" onClick={() => router.push("/payment")}>
-                💬
-            </button>
-
-            {/* Delete Modal */}
-            {modalVisible && (
-                <div className="modal-overlay" onClick={() => setModalVisible(false)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <h3>Delete Chat</h3>
-                        <p>Are you sure you want to delete chat with {selectedUser}?</p>
-                        <div className="modal-buttons">
-                            <button className="cancel-button" onClick={() => setModalVisible(false)}>
-                                Cancel
-                            </button>
-                            <button className="delete-button" onClick={handleDelete}>
-                                Delete
-                            </button>
-                        </div>
-                    </div>
+          return (
+            <div
+              key={user}
+              className="flex items-center justify-between bg-gray-800 rounded-xl p-3 md:p-4 cursor-pointer hover:bg-gray-700 transition"
+            >
+              <div className="flex items-center flex-1" onClick={() => openChat(item)}>
+                <div
+                  className="relative w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center mr-4"
+                  style={{ backgroundColor: avatarBg }}
+                >
+                  <span className="text-white font-bold text-lg md:text-xl">{firstLetter}</span>
+                  <span
+                    className={`absolute bottom-0 right-0 w-4 h-4 md:w-5 md:h-5 rounded-full border-2 border-gray-900 ${isOnline ? "bg-green-400" : "bg-gray-500"
+                      }`}
+                  />
                 </div>
-            )}
 
-            {/* <AnimatedAdsScreen /> */}
-            <style jsx>{`
-        .container {
-          padding: 12px;
-          background-color: #121212;
-          min-height: 100vh;
-          
-          position: relative;
-          width:  100vw;
-        }
-        .chat-list {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-          padding-bottom: 100px;
-        }
-        .chat-item {
-          display: flex;
-          align-items: center;
-          background-color: #1f1f1f;
-          padding: 12px;
-          border-radius: 12px;
-          position: relative;
-        }
-        .chat-left {
-          display: flex;
-          align-items: center;
-          flex: 1;
-          cursor: pointer;
-        }
-        .avatar {
-          width: 52px;
-          height: 52px;
-          border-radius: 26px;
-          background-color: #374151;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-right: 12px;
-          position: relative;
-        }
-        .avatar-text {
-          color: white;
-          font-weight: bold;
-          font-size: 20px;
-        }
-        .online-dot {
-          width: 12px;
-          height: 12px;
-          border-radius: 50%;
-          border: 2px solid #121212;
-          position: absolute;
-          bottom: 0;
-          right: 0;
-        }
-        .online-dot.online {
-          background-color: #34d399;
-        }
-        .online-dot.offline {
-          background-color: #6b7280;
-        }
-        .chat-text {
-          flex: 1;
-          min-width: 0;
-        }
-        .username {
-          color: white;
-          font-weight: 600;
-        }
-        .last-message {
-          color: #a1a1aa;
-          font-size: 13px;
-          margin-top: 2px;
-        }
-        .unread-badge {
-          background-color: #10b981;
-          color: white;
-          font-size: 10px;
-          font-weight: bold;
-          padding: 3px 6px;
-          border-radius: 12px;
-          margin-left: 6px;
-        }
-        .options-button {
-          background-color: #1f1f1f;
-          border: none;
-          color: white;
-          padding: 6px;
-          border-radius: 20px;
-          cursor: pointer;
-          margin-left: 8px;
-        }
-        .sticky-button {
-          position: fixed;
-          bottom: 25px;
-          right: 20px;
-          width: 60px;
-          height: 60px;
-          border-radius: 50%;
-          background-color: #25d366;
-          color: white;
-          font-size: 28px;
-          border: none;
-          cursor: pointer;
-        }
-        .modal-overlay {
-          position: fixed;
-          inset: 0;
-          background-color: rgba(0, 0, 0, 0.6);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 50;
-        }
-        .modal-content {
-          background-color: #1f1f1f;
-          padding: 20px;
-          border-radius: 12px;
-          text-align: center;
-        }
-        .modal-buttons {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 20px;
-          gap: 10px;
-        }
-        .cancel-button {
-          background-color: #6b7280;
-          color: white;
-          flex: 1;
-          padding: 10px;
-          border-radius: 8px;
-          cursor: pointer;
-        }
-        .delete-button {
-          background-color: #ef4444;
-          color: white;
-          flex: 1;
-          padding: 10px;
-          border-radius: 8px;
-          cursor: pointer;
-        }
-        .empty-text {
-          color: #a1a1aa;
-          text-align: center;
-          margin-top: 20px;
-        }
-      `}</style>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-semibold truncate">{user}</p>
+                  <p className="text-gray-400 text-sm truncate">
+                    {item.lastMessage || "Say hi!"}
+                  </p>
+                </div>
+
+                {item.unreadCount > 0 && (
+                  <div className="ml-2 bg-green-500 text-white text-xs md:text-sm font-bold px-2 py-1 rounded-full">
+                    {item.unreadCount}
+                  </div>
+                )}
+              </div>
+
+              <button
+                className="ml-3 text-gray-300 hover:text-red-500 transition text-xl"
+                onClick={() => confirmDelete(user)}
+              >
+                ⋮
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Sticky New Chat Button */}
+      <button
+        onClick={() => router.push("/payment")}
+        className="fixed bottom-6 right-6 w-16 h-16 md:w-20 md:h-20 rounded-full bg-green-500 text-white text-3xl md:text-4xl flex items-center justify-center shadow-lg hover:scale-105 transition"
+      >
+        💬
+      </button>
+
+      {/* Delete Modal */}
+      {modalVisible && (
+        <div
+          className="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
+          onClick={() => setModalVisible(false)}
+        >
+          <div
+            className="bg-gray-800 p-6 rounded-2xl w-11/12 max-w-sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="text-white font-bold text-lg mb-2">Delete Chat</h3>
+            <p className="text-gray-300 mb-4">
+              Are you sure you want to delete chat with{" "}
+              <span className="font-semibold">{selectedUser}</span>?
+            </p>
+            <div className="flex gap-3">
+              <button
+                className="flex-1 bg-gray-500 text-white py-2 rounded-lg hover:bg-gray-600 transition"
+                onClick={() => setModalVisible(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 }

@@ -118,7 +118,7 @@ export const ChatProvider = ({ children }) => {
                     localStorage.removeItem("premiumExpiry");
                 }
             } catch (err) {
-                console.error("Error fetching user:", err.message);
+                console.error("Error fetching user:",);
             }
         };
         fetchUserData();

@@ -32,6 +32,15 @@ export default function ChatRoom({ userId }) {
     const messagesEndRef = useRef();
     const router = useRouter();
 
+
+
+
+    useEffect(() => {
+
+        socket.emit("setUsername", myUsername);
+    }, [])
+
+
     // Filter only selected chat messages
     const filtered = messages.filter(
         (m) =>

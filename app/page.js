@@ -1,11 +1,16 @@
-
+'use client'
 
 import React from 'react'
 import Login from './login/page'
+import Link from 'next/link'
 
 function page() {
   return (
-    <Login />
+    <>
+
+      <Link href={"suspence"}>go now</Link>
+      <Login />
+    </>
   )
 }
 
