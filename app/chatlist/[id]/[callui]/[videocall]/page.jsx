@@ -160,7 +160,7 @@ export default function VideoCall() {
     const pc = useRef(null);
 
     const { socket, incomingUser, myUsername, } = useContext(ChatContext);
-    const ROOM_ID = incomingUser?.roomId || '123456';
+    const ROOM_ID = '123456';
     const router = useRouter();
 
     useEffect(() => {
@@ -173,6 +173,8 @@ export default function VideoCall() {
     useEffect(() => {
         if (!socket) return;
 
+
+        socket.emit("join-room", { roomId: ROOM_ID });
         // 1️⃣ Initialize peer connection
         const pcInstance = new RTCPeerConnection({
             iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -212,7 +214,7 @@ export default function VideoCall() {
         socket.on("end-call", handleEndCall);
 
         // 5️⃣ Join room and create offer automatically
-        socket.emit("join-room", { roomId: ROOM_ID });
+
 
         const timer = setTimeout(async () => {
             if (pc.current) {
