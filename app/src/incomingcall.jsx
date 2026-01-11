@@ -50,7 +50,7 @@ export default function IncomingCall() {
         }
         console.log('call ac[ected and do now')
         setIncomingCall(null);
-        socket.emit("accept-call", { from: myUsername, to: incomingUser.from });
+        socket.emit("accept-call", { from: myUsername, to: incomingUser.from, type: incomingUser.callType });
         socket.emit("join_room", { roomId: incomingUser.roomId });
         // Route according to type
         if (incomingUser.type === "video") {
@@ -90,7 +90,7 @@ export default function IncomingCall() {
                     {incomingCall.from} is callingggg
                 </h2>
                 <p style={styles.subtitle}>
-                    {incomingCall.type === "video" ? "Video Call" : "Audio Call"}
+                    {incomingUser.callType === "video" ? "Video Call" : "Audio Call"}
                 </p>
                 <div style={styles.buttons}>
                     <button style={{ ...styles.button, ...styles.accept }} onClick={acceptCall}>

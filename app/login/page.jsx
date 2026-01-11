@@ -148,7 +148,7 @@
 import { useState, useContext } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
+import { toast } from "react-toastify";
 import api from "@/app/src/api";
 import { ChatContext } from "@/app/src/context/chatcontext";
 
@@ -158,6 +158,23 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
+
+    const handleClick = ({ data = 'error aya ', type }) => {
+
+        console.log(type)
+
+        if (type === "Successful") {
+            toast.success('success'); // Success type
+
+        }
+        else {
+            toast.error(data);
+        }
+
+
+        // Info type
+        console.log("Box clicked!", data, type);
+    };
 
     const router = useRouter();
     const {
@@ -210,12 +227,15 @@ export default function Login() {
                 }
             }
 
-            alert("✅ Login Successful!");
+            // alert("✅ Login Successful!");
+            // handleClick("Login Successful!")
+            handleClick({ data: "Login Successful!", type: "Successful" })
             setLogin(true);
             router.push("/chatlist");
         } catch (err) {
-            console.log(err);
-            alert("❌ Invalid username or password");
+            console.log('error', err?.response?.data?.message);
+            // alert("❌ Invalid username or password");
+            handleClick({ data: err?.response?.data?.message, type: "error" })
         } finally {
             setLoading(false);
         }

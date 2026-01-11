@@ -4,6 +4,8 @@ import { ChatProvider } from "@/app/src/context/chatcontext";
 import WhatsAppLayout from "@/app/src/whatsaplayout";
 import ClientLayout from "@/app/src/notification";
 import IncomingCall from "./src/incomingcall";
+import 'react-toastify/dist/ReactToastify.css';
+import Tost from "./src/compoent/tost"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +35,9 @@ export default function RootLayout({ children }) {
             {children}
           </ClientLayout>
           <IncomingCall />
+          <Tost />
         </ChatProvider>
+
 
       </body>
     </html>

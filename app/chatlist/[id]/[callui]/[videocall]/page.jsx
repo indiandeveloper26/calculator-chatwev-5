@@ -159,9 +159,16 @@ export default function VideoCall() {
     const [isMuted, setIsMuted] = useState(false);
     const pc = useRef(null);
 
-    const { socket, incomingUser } = useContext(ChatContext);
+    const { socket, incomingUser, myUsername, } = useContext(ChatContext);
     const ROOM_ID = incomingUser?.roomId || '123456';
     const router = useRouter();
+
+    useEffect(() => {
+        console.log('videocromm icnouser jisebatt ho rhai ', incomingUser.from)
+
+
+    }, [incomingUser])
+
 
     useEffect(() => {
         if (!socket) return;
@@ -245,7 +252,7 @@ export default function VideoCall() {
 
     const handleEndCall = () => {
         cleanupCall();
-        socket?.emit("end-call", { roomId: ROOM_ID });
+        socket?.emit("end-call", { roomId: ROOM_ID, to: incomingUser.from, from: myUsername });
         router.push('/chatlist');
     };
 
