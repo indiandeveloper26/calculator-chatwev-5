@@ -7,8 +7,8 @@ import Link from 'next/link'
 function page() {
   return (
     <>
-
-      <Link href={"suspence"}>go now</Link>
+      {/* 
+      <Link href={"suspence"}>go now</Link> */}
       <Login />
     </>
   )

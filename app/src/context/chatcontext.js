@@ -30,6 +30,8 @@ export const ChatProvider = ({ children }) => {
     const [userdata, setUserdata] = useState(null);
     const [setcurrenuser, setsetcurrenuser] = useState(null)
     const typingTimeoutRef = useRef(null);
+    const [theme, setTheme] = useState("light");
+    const [themeMounted, setThemeMounted] = useState(false);
 
 
     let ruter = useRouter()
@@ -41,6 +43,39 @@ export const ChatProvider = ({ children }) => {
             const v = c === "x" ? r : (r & 0x3 | 0x8);
             return v.toString(16);
         });
+
+
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+
+        const savedTheme = localStorage.getItem("theme");
+
+        if (savedTheme) {
+            setTheme(savedTheme);
+        } else {
+            const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+            setTheme(systemTheme);
+        }
+
+        setThemeMounted(true);
+    }, []);
+
+
+    useEffect(() => {
+        if (!themeMounted) return;
+
+        document.documentElement.classList.remove("light", "dark");
+        document.documentElement.classList.add(theme);
+        localStorage.setItem("theme", theme);
+    }, [theme, themeMounted]);
+
+
+    const toggleTheme = () => {
+        setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+    };
+
 
     // ✅ Initialize user and socket
     useEffect(() => {
@@ -174,25 +209,30 @@ export const ChatProvider = ({ children }) => {
 
 
         const handleCallAccepted = ({ from }) => {
+
+
+            console.log('call utha liye usme ab')
             console.log("✅ Call accepted by:", from);
             setAcceptedCall(true);
             setIncomingCall(false);
 
-            socket.emit('accept-call', { to: myUsername });
+            ruter.push(`chatlist/luh/callui/videocall`);
 
-            console.log(incomingUser)
+            // socket.emit('accept-call', { to: myUsername });
 
-            // Use incomingUser.type to decide route
-            if (incomingUser?.type === 'audio') {
-                console.log('type auso')
-                ruter.push("/");
-            } else if (incomingUser?.type === 'video') {
-                console.log('type vidoecall')
-                ruter.push(`/chatlist/${from}/callui/videocall`);
-            } else {
-                // fallback
-                ruter.push(`/chatlist/${from}`);
-            }
+            // console.log(incomingUser)
+
+            // // Use incomingUser.type to decide route
+            // if (incomingUser?.type === 'audio') {
+            //     console.log('type auso')
+            //     ruter.push("/");
+            // } else if (incomingUser?.type === 'video') {
+            //     console.log('type vidoecall')
+            //     ruter.push(`/`);
+            // } else {
+            //     // fallback
+            //     ruter.push(`/chatlist/${from}`);
+            // }
         };
 
 
@@ -412,6 +452,8 @@ export const ChatProvider = ({ children }) => {
                 acceptCall,
                 layouthide,
                 setlayouthide,
+                theme,
+                toggleTheme,
                 rejectCall,
             }}
         >
