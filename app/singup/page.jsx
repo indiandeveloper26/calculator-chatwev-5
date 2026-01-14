@@ -234,6 +234,7 @@ import { useRouter } from "next/navigation";
 
 import api from "@/app/src/api";
 import { ChatContext } from "../src/context/chatcontext";
+import { toast } from "react-toastify";
 
 export default function SignupPage() {
     const [username, setUsername] = useState("");
@@ -305,7 +306,9 @@ export default function SignupPage() {
                 );
             }
 
-            alert("✅ Signup successful! You got 2 days premium!");
+            // alert("✅ Signup successful! You got 2 days premium!");
+
+            toast.success("✅ Signup successful!")
             setLogin(true);
             router.push("/chatlist");
         } catch (error) {
