@@ -42,7 +42,7 @@ export default function IncomingCall() {
     const acceptCall = () => {
 
 
-        console.log(incomingUser)
+        console.log('icoming user and type', incomingUser)
         console.log('call ac[ected and do now')
         if (audioRef.current) {
             audioRef.current.pause();
@@ -53,10 +53,10 @@ export default function IncomingCall() {
         socket.emit("accept-call", { from: myUsername, to: incomingUser.from, type: incomingUser.callType });
         socket.emit("join_room", { roomId: incomingUser.roomId });
         // Route according to type
-        if (incomingUser.type === "video") {
+        if (incomingUser.callType === "video") {
             router.push(`/chatlist/${incomingUser}/callui/videocall`);
         } else {
-            router.push(`/chatlist/${incomingUser.from}/callui/videocall`);
+            router.push(`/chatlist/auidocall/sahil`);
         }
 
 

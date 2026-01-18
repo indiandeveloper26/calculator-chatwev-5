@@ -252,6 +252,8 @@ export default function VideoCall() {
         socket?.off("end-call");
     };
 
+    console.log('incomig user ', incomingUser)
+
     const handleEndCall = () => {
         cleanupCall();
         socket?.emit("end-call", { roomId: ROOM_ID, to: incomingUser.from, from: myUsername });

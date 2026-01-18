@@ -627,12 +627,26 @@ export const ChatProvider = ({ children }) => {
 
         const handleCallAccepted = ({ from, type }) => {
 
-            console.log('call acpeted', type, from)
+            console.log('call acpetedttt', type, from)
 
-            setIncomingUser({ from, type })
-            setAcceptedCall(true);
-            setIncomingCall(false);
-            router.push(`/chatlist/${'akku'}/callui/videocall`);
+            if (type === "video") {
+                setIncomingUser({ from, type })
+                setAcceptedCall(true);
+                setIncomingCall(false);
+                router.push(`/chatlist/${'akku'}/callui/videocall`);
+            } else if (type === "audio") {
+                let dd = 'fasdfsad'
+                setIncomingUser(dd)
+                console.log('hogyaa')
+                setAcceptedCall(true);
+                setIncomingCall(false);
+
+                router.push(`/chatlist/auidocall/sahil`);
+            }
+
+
+
+
         };
 
         const handleCallRejected = ({ by }) => {

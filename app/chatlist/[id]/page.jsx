@@ -595,7 +595,7 @@ export default function ChatRoom({ userId }) {
 
     const handleAudioCall = () => {
         socket.emit("call-user", {
-            from: myUsername, to: id, callType: "video", roomId: "123456"
+            from: myUsername, to: id, callType: "audio ", roomId: "123456"
         });
         router.push(`/chatlist/auidocall/${id}`);
     };
